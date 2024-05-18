@@ -1,0 +1,1 @@
+package check_distance_between_same_letters;
