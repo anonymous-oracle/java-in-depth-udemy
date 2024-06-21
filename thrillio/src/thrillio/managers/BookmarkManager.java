@@ -2,6 +2,7 @@ package thrillio.managers;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.PrimitiveIterator.OfDouble;
 
 import thrillio.dao.BookmarkDao;
@@ -64,7 +65,7 @@ public class BookmarkManager {
 		return movie;
 
 	}
-	public Bookmark[][] getBookmarks(){
+	public List<List<Bookmark>> getBookmarks(){
 		return dao.getBookmarks();
 	}
 

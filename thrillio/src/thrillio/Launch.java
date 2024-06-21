@@ -1,14 +1,16 @@
 package thrillio;
 
 
+import java.util.List;
+
 import thrillio.entities.Bookmark;
 import thrillio.entities.User;
 import thrillio.managers.BookmarkManager;
 import thrillio.managers.UserManager;
 
 public class Launch {
-	private static User[] users;
-	private static Bookmark[][] bookmarks;
+	private static List<User> users;
+	private static List<List<Bookmark>> bookmarks;
 	public static void main(String[] args) {
 		loadData();
 		start();
@@ -24,7 +26,7 @@ public class Launch {
 	}
 
 	private static void printBookMarkData() {
-		for(Bookmark[] bookmarkList: bookmarks) {
+		for(List<Bookmark> bookmarkList: bookmarks) {
 			System.out.println();
 			for(Bookmark bookmark: bookmarkList) {
 				System.out.println(bookmark);

@@ -1,5 +1,7 @@
 package thrillio.managers;
 
+import java.util.List;
+
 import thrillio.dao.UserDao;
 import thrillio.entities.*;
 
@@ -30,7 +32,7 @@ public class UserManager {
 
 		return user;
 	}
-	public User[] getUsers() {
+	public List<User> getUsers() {
 		return dao.getUsers();
 		
 	}

@@ -58,7 +58,7 @@ public class IOUtil {
 
 	public static void write(String webpage, long id) {
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream("/Users/suhas/eclipse/pages/" + String.valueOf(id) + ".html"), "UTF-8"))) {
+				new FileOutputStream("/Users/suhasks/eclipse/pages/" + String.valueOf(id) + ".html"), "UTF-8"))) {
 			bw.write(webpage);
 
 		} catch (UnsupportedEncodingException e) {
