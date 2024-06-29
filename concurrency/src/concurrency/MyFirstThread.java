@@ -1,5 +1,6 @@
 package concurrency;
 
+import java.util.concurrent.TimeUnit;
 
 public class MyFirstThread {
 
@@ -9,6 +10,7 @@ public class MyFirstThread {
 		thread.start();
 		try {
 			Thread.sleep(3000);
+			thread.interrupt(); // interrupts this particlular thread if it has not finished execution
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -21,6 +23,13 @@ class Task implements Runnable {
 	@Override
 	public void run() {
 		System.out.println("Inside run function...");
+		try {
+//			Thread.sleep(3000);
+			TimeUnit.SECONDS.sleep(9);
+		} catch (InterruptedException e) {
+//			e.printStackTrace();
+			System.out.println("The thread is interrupted");
+		}
 		go();
 	}
 
