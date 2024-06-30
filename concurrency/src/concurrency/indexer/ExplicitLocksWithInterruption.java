@@ -163,9 +163,8 @@ private Deque<Weblink> queue = new ArrayDeque<>();
 				// Clean-up: Stopping downloader thread indirectly
 				weblink.setStop(true);
 				
-				Thread.currentThread().interrupt();
 			} finally {
-				if (!Thread.currentThread().isInterrupted())
+				if (Thread.interrupted()) // checks if thread was interrupted since lock would have been acquired if the thread was interrupted; so lock.lockInterruptibly was used to throw the exception
 					lock.unlock();
 			}
 		}

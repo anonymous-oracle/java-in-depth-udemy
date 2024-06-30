@@ -37,7 +37,7 @@ public class IOUtil {
 	
 	
 
-	public static String read(InputStream in) {
+	public static String read(InputStream in) throws IOException {
 		StringBuilder text = new StringBuilder();
 		
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"))) {
@@ -50,7 +50,8 @@ public class IOUtil {
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
+			throw e;
 		}
 		
 		return text.toString();
