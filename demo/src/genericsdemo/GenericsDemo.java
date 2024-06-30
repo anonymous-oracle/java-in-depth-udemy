@@ -60,7 +60,7 @@ public class GenericsDemo <T> {
 		List<Integer> intList2 = Arrays.asList(3, 4);		
 		invalidAggregate(intList1, intList2, new ArrayList());
 		
-		//go(new ArrayList<Integer>());
+//		go(new ArrayList<Integer>());
 		//go(new Integer[1]);
 		
 		genericMethodsDemo();
@@ -168,7 +168,7 @@ public class GenericsDemo <T> {
 		new GenericsDemo<Number>(12.0); // T is Number, E is Double
 		new GenericsDemo<>(12.0); // T & E are Double
 		new <Double>GenericsDemo<Number>(12.0); // Type witness!!
-		//new <Double>GenericsDemo<>(12.0); // Could have inferred from arg
+//		new <Double>GenericsDemo<>(12.0); // Could have inferred from arg
 		GenericsDemo<Number> gd = new GenericsDemo<>(12.0); // To avoid invariance, smartly infers Number for <> rather than Double 
 				
 		List<Integer> intList1 = Arrays.asList(1, 2);
