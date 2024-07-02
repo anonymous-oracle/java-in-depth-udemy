@@ -5,6 +5,7 @@ import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,11 +61,124 @@ public class GenericsDemo <T> {
 		List<Integer> intList2 = Arrays.asList(3, 4);		
 		invalidAggregate(intList1, intList2, new ArrayList());
 		
-//		go(new ArrayList<Integer>());
+		//go(new ArrayList<Integer>());
 		//go(new Integer[1]);
 		
 		genericMethodsDemo();
+		
+		// Invariance Workaround
+		//GenericsDemo.invarianceWorkaround(new ArrayList<String>());
+		GenericsDemo.invarianceWorkaround(new ArrayList<Number>()); // Integer
+		List<Integer> intList3 = new ArrayList<>();
+		//GenericsDemo.invarianceWorkaround(intList3, 23);
+		//GenericsDemo.invarianceWorkaround(intList3);
+		//Integer data = intList3.get(0);
+				
+		boundedWildcards();		
 	}
+	
+	
+	/*static <T extends Number> void display(List<T> list) {
+		for (Number element : list) {
+			System.out.println("display()/element: " + element);
+		}
+	}*/
+	
+	// Changing to super will give compiler error as with super 
+	// List<Object> can be passed and here Number is the type in for-loop.
+	// Would work if type in for-loop is changed to Object
+	static void display(List<? extends Number> list) {
+		for (Number element : list) {
+			System.out.println("display()/element: " + element/*.intValue()*/);
+		}
+		//list.add(22);
+	}
+	
+	static void boundedWildcards() {		
+		System.out.println("\n\nInside boundedWildcards ...");
+		List<Integer> intList = Arrays.asList(11,21,31);
+		display(intList);
+		List<Double> doubleList = Arrays.asList(11.5,21.5,31.5);
+		display(doubleList);
+		
+		
+		// Pass a List<String> too!!
+		List<Number> numList = new ArrayList<>();
+		aggregateWithConsumer(intList, doubleList, numList);
+		System.out.println("numList: " + numList);
+		
+		Collections.addAll(new ArrayList<Object>(), 1, 2);
+		Collections.copy(numList, doubleList);
+		System.out.println("numList after copy: " + numList);
+		System.out.println("Collections.disjoint: " + Collections.disjoint(intList, doubleList));
+		
+		// Type argument inference is Integer with wildcard type version of replaceAll!
+		GenericsDemo.replaceAll(numList, 11.5, 44);
+		System.out.println("numList: " + numList);	
+		
+		//ArrayList<Number> numList2 = new ArrayList<>(intList);
+	}
+	
+	
+	/*static <T> boolean replaceAll(List<? super T> list, T oldVal, T newVal) {
+		for (int i = 0; i < list.size(); i++) {
+			   if (oldVal.equals(list.get(i)))
+			      list.set(i, newVal);
+		}
+		return true;
+	}*/
+	
+	// Demonstrates exact match as it both produces & consumes data
+	static <T> boolean replaceAll(List<T> list, T oldVal, T newVal) {
+		for (int i = 0; i < list.size(); i++) {
+			   if (oldVal.equals(list.get(i)))
+			      list.set(i, newVal);
+		}
+		return true;
+	}
+	static <T extends Number> void replaceTest(List<? super Number> list, T oldVal, T newVal) {
+		for (int i = 0; i < list.size(); i++) {
+			Number n = (Number)list.get(0);	
+			if (n.intValue() == oldVal.intValue()) {
+				list.set(i, newVal);
+			}
+		}		
+	}
+	static void replaceTest1(List<Number> list, Number oldVal, Number newVal) {
+		for (int i = 0; i < list.size(); i++) {
+			Number n = list.get(0);	
+			if (n.intValue() == oldVal.intValue()) {
+				list.set(i, newVal);
+			}
+		}		
+	}
+	
+	// Invariance workaround ~ For harmless scenarios where type safety is not a concern
+	static <T extends Number> void invarianceWorkaround(List<T> list /*, T element*/) {
+		//list.add(new Double(23.3));
+		
+		T element = (T) new Double(23.3); // typically element of type T will be a method parameter
+		list.add(element);
+	}
+		
+	// This highlights the difference from above generic method. This version
+	// does not even allow invocation of add method (only way is to use helper method)
+	static <T> void invarianceWorkaroundWithWildcard(List<? extends T> list , T element) {
+		//list.add(new Double(23.3));
+			
+		//T element = (T) new Double(23.3); // typically element of type T will be a method parameter
+		//list.add(element);
+	}
+	
+	static void invarianceWorkaround2(List<? extends Number> list) {
+		//list.add(new Double(23.3));
+		// capture(list);
+	}
+	/*
+	static <T> void capture(List<T> list) {
+		T element = (T) new Double(23.3);
+		list.add(element);
+	}*/
 	
 	static <T> void arrayToCollection(T[] a, Collection<T> c) {
 	    for (T o : a) {
@@ -168,7 +282,7 @@ public class GenericsDemo <T> {
 		new GenericsDemo<Number>(12.0); // T is Number, E is Double
 		new GenericsDemo<>(12.0); // T & E are Double
 		new <Double>GenericsDemo<Number>(12.0); // Type witness!!
-//		new <Double>GenericsDemo<>(12.0); // Could have inferred from arg
+		//new <Double>GenericsDemo<>(12.0); // Could have inferred from arg
 		GenericsDemo<Number> gd = new GenericsDemo<>(12.0); // To avoid invariance, smartly infers Number for <> rather than Double 
 				
 		List<Integer> intList1 = Arrays.asList(1, 2);
@@ -176,8 +290,7 @@ public class GenericsDemo <T> {
 		List<Integer> intList3 = new ArrayList<>();
 		aggregate(intList1, intList2, intList3);
 		System.out.println("intList3: " +  intList3);		
-	}
-	
+	}	
 	
 	// Invariance
 	static void go(List<Number> list) {}
@@ -186,6 +299,23 @@ public class GenericsDemo <T> {
 	static void go(Number[] list) {
 		list[0] = 24.4;
 	}	
+	
+	// Item 28: If Type parameter will be used only once, then go with wildcard
+	//             Replace unbounded type parameter with unbounded wildcard
+	//             Replace 
+	public static <E3, E1 extends E3, E2 extends E3> void aggregateWithConsumer2(List<E1> l1, 
+			List<E2> l2, List<E3> l3) {
+		l3.addAll(l1);
+		l3.addAll(l2);
+	}
+	
+	// Renaming to aggregate leads to compiler error due to type erasure
+	// e.g., l1 --> List<Integer, l2 --> List<Double>
+	public static <E> void aggregateWithConsumer(List<? extends E> l1, 
+			List<? extends E> l2, List<? super E> l3) {
+		l3.addAll(l1);
+		l3.addAll(l2);
+	}
 	
 	public static <E> void aggregate(List<E> l1, List<E> l2, List<E> l3) {
 		l3.addAll(l1);
